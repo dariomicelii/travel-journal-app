@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\Trip;
+use App\Models\Rating;
+use App\Models\Tag;
 
 class TripController extends Controller
 {
@@ -22,7 +25,14 @@ class TripController extends Controller
      */
     public function create()
     {
-        return view('trips.create');
+        //prendo le valutazioni
+        $ratings = Rating::all();
+
+        //prendo i tag
+        $tags = Tag::all();
+
+
+        return view('trips.create', compact('ratings', 'tags'));
     }
 
     /**
@@ -33,12 +43,19 @@ class TripController extends Controller
         $data = $request->all();
         $newTrip = new Trip();
 
+        $newTrip->image_path = $data['image_path'];
         $newTrip->destination = $data['destination'];
         $newTrip->start_date = $data['start_date'];
+        $newTrip->rating_id = $data['rating_id'];
         $newTrip->end_date = $data['end_date'];
         $newTrip->notes = $data['notes'];
 
         $newTrip->save();
+
+        //Controllo se esistono i tag nell'array
+        if($request->has('tags')) {
+            $newTrip->tags()->attach($data['tags']);
+        }
 
         return redirect()->route('trips.index', $newTrip);
     }
@@ -56,7 +73,9 @@ class TripController extends Controller
      */
     public function edit(Trip $trip)
     {
-        return view('trips.edit', compact('trip'));
+        $ratings = Rating::all();
+        $tags = Tag::all();
+        return view('trips.edit', compact('trip', 'ratings', 'tags'));
     }
 
     /**
@@ -66,23 +85,44 @@ class TripController extends Controller
     {
         $data = $request->all();
 
+        $trip->image_path = $data['image_path'];
         $trip->destination = $data['destination'];
         $trip->start_date = $data['start_date'];
         $trip->end_date = $data['end_date'];
+        $trip->rating_id = $data['rating_id'];
         $trip->notes = $data['notes'];
 
         $trip->update();
 
-        return redirect()->route('trips.index', $trip);
+        //Verifico se esistono i tag nell'array
+        if($request->has('tags')) {
+            //Sincronizziamo i tag
+            $trip->tags()->sync($data['tags']);
+        }else{
+            //Se non ci sono tag nell'array, stacchiamo tutti i tag
+            $trip->tags()->detach();
+        }
+
+
+        return redirect()->route('trips.show', $trip);
     }
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(Trip $trip)
-    {
-        $trip->delete();
-
-        return redirect()->route('trips.index');
+{
+    // Se esiste un'immagine associata, la elimina dallo storage
+    if ($trip->image_path && Storage::exists('public/' . $trip->image_path)) {
+        Storage::delete('public/' . $trip->image_path);
     }
+
+    // Elimina la relazione con i tag, se usi il pivot table
+    $trip->tags()->detach();
+
+    // Elimina il record dal database
+    $trip->delete();
+
+    return redirect()->route('trips.index')->with('message', 'Viaggio eliminato con successo!');
+}
 }

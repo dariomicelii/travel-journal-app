@@ -21,6 +21,8 @@ class TripsTableSeeder extends Seeder
             $newTrip->start_date = $faker->date();
             $newTrip->end_date = $faker->date();
             $newTrip->notes = $faker->paragraph();
+            $newTrip->image_path = $faker->imageUrl(640, 480, 'travel', true);
+            $newTrip->rating_id = $faker->randomElement([1, 2, 3, 4, 5]);
 
             $newTrip->save();
         }

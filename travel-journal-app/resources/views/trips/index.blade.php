@@ -28,4 +28,8 @@
     </tbody>
 </table>
 
+    <div class="d-flex py-4">
+        <a class="btn btn-outline-primary" href="{{ route('trips.create') }}">Aggiungi viaggio</a>
+    </div>
+
 @endsection

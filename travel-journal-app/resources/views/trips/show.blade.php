@@ -3,10 +3,22 @@
 @section("title", "Dettagli del viaggio")
 
 @section("content")
-
+    @if ($trip->image_path)
+        <div>
+            <img src="{{ $trip->image_path }}" alt="Immagine del viaggio" style="max-width: 100%; height: auto;">
+        </div>
+    @endif
     <h2>{{ $trip->destination }}</h2>
     <p>Data di partenza: {{ $trip->start_date }}</p>
     <p>Data di ritorno: {{ $trip->end_date }}</p>
+    <p>Valutazione: {{ $trip->rating->rating }}</p>
+    <p>Tags:
+        @forelse($trip->tags as $tag)
+            <span class="badge" style="background-color: {{ $tag->color }}">{{ $tag->name }}</span>
+        @empty
+            Nessuno
+        @endforelse
+    </p>
     <p>Note: {{ $trip->notes }}</p>
 
     <div class="d-flex py-4">
