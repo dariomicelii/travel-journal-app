@@ -18,6 +18,16 @@
         </div>
 
         <div class="form-control mb-3 d-flex flex-column">
+            <label for="latitude">Latitudine</label>
+            <input type="number" name="latitude" id="latitude" class="form-control" value="{{ $trip->latitude }}" step="any" required>
+        </div>
+
+        <div class="form-control mb-3 d-flex flex-column">
+            <label for="longitude">Longitudine</label>
+            <input type="number" name="longitude" id="longitude" class="form-control" value="{{ $trip->longitude }}" step="any" required>
+        </div>
+
+        <div class="form-control mb-3 d-flex flex-column">
             <label for="start_date">Data di inizio</label>
             <input type="date" name="start_date" id="start_date" class="form-control" value="{{ $trip->start_date }}" required>
         </div>

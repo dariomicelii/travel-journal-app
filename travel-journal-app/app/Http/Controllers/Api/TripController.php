@@ -52,4 +52,14 @@ class TripController extends Controller
     ]);
 }
 
+public function mapData() {
+    $trips = Trip::select('id', 'destination', 'latitude', 'longitude')->get();
+
+    return response()->json([
+        'success' => true,
+        'data' => $trips
+    ]);
+}
+
+
 }
