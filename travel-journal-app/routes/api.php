@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\TripController;
 
 Route::get("trips", [TripController::class, 'index']);
 
-Route::get('/trips/map', [TripController::class, 'mapData']);
+Route::get('/trips/map', [TripController::class, 'map']);
 
 Route::get("trips/{trip}", [TripController::class, 'show']);
 

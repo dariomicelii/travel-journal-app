@@ -67,6 +67,28 @@ class TripController extends Controller
     ]);
 }
 
+public function map()
+{
+    $trips = Trip::with('tags', 'rating')->get();
+
+    $trips = $trips->map(function($trip) {
+        return [
+            'id' => $trip->id,
+            'destination' => $trip->destination,
+            'latitude' => $trip->latitude,
+            'longitude' => $trip->longitude,
+            'start_date' => $trip->start_date,
+            'end_date' => $trip->end_date,
+            'tags' => $trip->tags,
+            'rating' => $trip->rating ? $trip->rating->rating : null,
+        ];
+    });
+
+    return response()->json([
+        'success' => true,
+        'data' => $trips
+    ]);
+}
 
 
 }
