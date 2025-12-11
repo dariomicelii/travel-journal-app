@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <form action="{{ route('trips.update', $trip) }}" method="POST">
+    <form action="{{ route('trips.update', $trip) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -35,6 +35,11 @@
         <div class="form-control mb-3 d-flex flex-column">
             <label for="end_date">Data di fine</label>
             <input type="date" name="end_date" id="end_date" class="form-control" value="{{ $trip->end_date }}" required>
+        </div>
+
+        <div class="form-control mb-3 d-flex flex-column">
+            <label>Foto viaggio</label>
+            <input type="file" name="photos[]" multiple>
         </div>
         
         <div class="form-control mb-3 d-flex flex-column">

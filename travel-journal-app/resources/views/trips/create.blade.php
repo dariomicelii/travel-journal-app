@@ -38,6 +38,11 @@
         </div>
 
         <div class="form-control mb-3 d-flex flex-column">
+            <label>Foto viaggio</label>
+            <input type="file" name="photos[]" multiple>
+        </div>
+
+        <div class="form-control mb-3 d-flex flex-column">
             <label for="rating_id">Valutazione</label>
             <select name="rating_id" id="rating_id" class="form-control" required>
                 <option value="" disabled selected>Seleziona una valutazione</option>

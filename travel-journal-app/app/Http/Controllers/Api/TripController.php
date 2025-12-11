@@ -35,7 +35,17 @@ class TripController extends Controller
 
     public function show(Trip $trip)
 {
-    $trip->load(['tags', 'rating']); // carica tag e rating
+    // carica tag, rating e foto
+    $trip->load(['tags', 'rating', 'photos']);
+
+    // trasforma le foto per avere l'URL completo
+    $photos = $trip->photos->map(function($photo) {
+        return [
+            'id' => $photo->id,
+            'url' => asset('storage/' . $photo->photo_path), // percorso pubblico
+            'caption' => $photo->caption
+        ];
+    });
 
     return response()->json([
         'success' => true,
@@ -48,18 +58,15 @@ class TripController extends Controller
             'end_date' => $trip->end_date,
             'rating' => $trip->rating ? $trip->rating->rating : null,
             'tags' => $trip->tags,
+            'photos' => $trip->photos->map(fn($p) => [
+                'id' => $p->id,
+                'url' => asset('storage/' . $p->photo_path),
+                'caption' => $p->caption
+            ]), // aggiunta qui
         ]
     ]);
 }
 
-public function mapData() {
-    $trips = Trip::select('id', 'destination', 'latitude', 'longitude')->get();
-
-    return response()->json([
-        'success' => true,
-        'data' => $trips
-    ]);
-}
 
 
 }

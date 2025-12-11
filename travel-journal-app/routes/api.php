@@ -16,3 +16,6 @@ Route::get("trips/{trip}", [TripController::class, 'show']);
 
 Route::delete('/trips/{trip}', [TripController::class, 'destroy']);
 
+Route::middleware('auth')->group(function () {
+    Route::post('/trips/{trip}/photos', [TripPhotoController::class, 'store']);
+});

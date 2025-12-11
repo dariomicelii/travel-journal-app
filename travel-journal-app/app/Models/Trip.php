@@ -14,4 +14,8 @@ class Trip extends Model
     public function tags() {
         return $this->belongsToMany(Tag::class);
     }
+
+    public function photos() {
+        return $this->hasMany(TripPhoto::class);
+    }
 }

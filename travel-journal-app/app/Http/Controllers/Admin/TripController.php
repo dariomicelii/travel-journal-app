@@ -51,12 +51,12 @@ class TripController extends Controller
         'longitude' => 'required|numeric',
         'image_path' => 'nullable|string',
         'tags' => 'nullable|array',
-        'tags.*' => 'exists:tags,id'
+        'tags.*' => 'exists:tags,id',
+        'photos.*' => 'image|max:2048' // validazione foto
     ]);
 
     $data = $request->all();
     $newTrip = new Trip();
-
     $newTrip->image_path = $data['image_path'] ?? null;
     $newTrip->destination = $data['destination'];
     $newTrip->start_date = $data['start_date'];
@@ -65,11 +65,18 @@ class TripController extends Controller
     $newTrip->notes = $data['notes'] ?? null;
     $newTrip->latitude = $data['latitude'];
     $newTrip->longitude = $data['longitude'];
-
     $newTrip->save();
 
     if (!empty($data['tags'])) {
         $newTrip->tags()->attach($data['tags']);
+    }
+
+    // Salva le foto
+    if ($request->hasFile('photos')) {
+        foreach ($request->file('photos') as $file) {
+            $path = $file->store('trip_photos', 'public');
+            $newTrip->photos()->create(['photo_path' => $path]);
+        }
     }
 
     return redirect()->route('trips.index');
@@ -109,11 +116,11 @@ class TripController extends Controller
         'longitude' => 'required|numeric',
         'image_path' => 'nullable|string',
         'tags' => 'nullable|array',
-        'tags.*' => 'exists:tags,id'
+        'tags.*' => 'exists:tags,id',
+        'photos.*' => 'image|max:2048' // validazione foto
     ]);
 
     $data = $request->all();
-
     $trip->image_path = $data['image_path'] ?? null;
     $trip->destination = $data['destination'];
     $trip->start_date = $data['start_date'];
@@ -122,7 +129,6 @@ class TripController extends Controller
     $trip->notes = $data['notes'] ?? null;
     $trip->latitude = $data['latitude'];
     $trip->longitude = $data['longitude'];
-
     $trip->save();
 
     if (!empty($data['tags'])) {
@@ -131,8 +137,17 @@ class TripController extends Controller
         $trip->tags()->detach();
     }
 
+    // Salva eventuali nuove foto
+    if ($request->hasFile('photos')) {
+        foreach ($request->file('photos') as $file) {
+            $path = $file->store('trip_photos', 'public');
+            $trip->photos()->create(['photo_path' => $path]);
+        }
+    }
+
     return redirect()->route('trips.show', $trip);
 }
+
 
 
     /**
