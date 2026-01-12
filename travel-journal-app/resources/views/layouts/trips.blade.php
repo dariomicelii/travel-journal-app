@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>
+        <h1 class="my-4">
             @yield("title")
         </h1>
 

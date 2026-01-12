@@ -3,33 +3,45 @@
 @section("title", "Dettagli del viaggio")
 
 @section("content")
-    @if ($trip->image_path)
-        <div>
-            <img src="{{ $trip->image_path }}" alt="Immagine del viaggio" style="max-width: 100%; height: auto;">
+<div class="d-flex justify-content-center my-4">
+  <div class="card shadow-sm" style="max-width: 800px; width: 100%;">
+    <div class="row g-0">
+      <!-- Immagine più larga -->
+      <div class="col-md-5">
+        @if ($trip->image_path)
+          <img src="{{ asset($trip->image_path) }}" 
+               alt="Immagine del viaggio" 
+               class="img-fluid h-100 rounded-start" 
+               style="object-fit: cover;">
+        @endif
+      </div>
+      <div class="col-md-7">
+        <div class="card-body py-2 px-3">
+          <h3 class="card-title mb-2">{{ $trip->destination }}</h3>
+          <p class="mb-1"><strong>Partenza:</strong> {{ $trip->start_date }}</p>
+          <p class="mb-1"><strong>Ritorno:</strong> {{ $trip->end_date }}</p>
+          <p class="mb-1"><strong>Valutazione:</strong> {{ $trip->rating->rating ?? 'N/A' }}</p>
+          <p class="mb-1"><strong>Note:</strong> {{ $trip->notes }}</p>
+          <p class="mb-1"><strong>Tags:</strong>
+              @forelse($trip->tags as $tag)
+                  <span class="badge" style="background-color: {{ $tag->color }}">{{ $tag->name }}</span>
+              @empty
+                  Nessuno
+              @endforelse
+          </p>
+          <div class="d-flex gap-2 mt-2">
+            <a class="btn btn-outline-warning btn-sm" href="{{ route('trips.edit', $trip) }}">Modifica</a>
+            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">Elimina</button>
+          </div>
         </div>
-    @endif
-    <h2>{{ $trip->destination }}</h2>
-    <p>Data di partenza: {{ $trip->start_date }}</p>
-    <p>Data di ritorno: {{ $trip->end_date }}</p>
-    <p>Valutazione: {{ $trip->rating->rating }}</p>
-    <p>Tags:
-        @forelse($trip->tags as $tag)
-            <span class="badge" style="background-color: {{ $tag->color }}">{{ $tag->name }}</span>
-        @empty
-            Nessuno
-        @endforelse
-    </p>
-    <p>Note: {{ $trip->notes }}</p>
-
-    <div class="d-flex py-4">
-        <a class="btn btn-outline-warning" href="{{ route('trips.edit', $trip) }}">Modifica</a>
-
-        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Elimina
-        </button>
-
-        
+      </div>
     </div>
+  </div>
+</div>
+
+
+
+
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

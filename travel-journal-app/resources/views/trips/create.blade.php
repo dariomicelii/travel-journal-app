@@ -3,9 +3,8 @@
 @section('title', 'Aggiungi un nuovo viaggio')
 
 @section('content')
-    <h1>Aggiungi un nuovo viaggio</h1>
 
-    <form action="{{ route('trips.store') }}" method="POST">
+    <form action="{{ route('trips.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="form-control mb-3 d-flex flex-column">
             <label for="image_path">URL Immagine</label>
@@ -19,12 +18,12 @@
 
         <div class="form-control mb-3 d-flex flex-column">
             <label for="latitude">Latitudine</label>
-            <input type="number" name="latitude" id="latitude" class="form-control" value="{{ $trip->latitude }}" step="any" required>
+            <input type="number" name="latitude" id="latitude" class="form-control" step="any" required>
         </div>
 
         <div class="form-control mb-3 d-flex flex-column">
             <label for="longitude">Longitudine</label>
-            <input type="number" name="longitude" id="longitude" class="form-control" value="{{ $trip->longitude }}" step="any" required>
+            <input type="number" name="longitude" id="longitude" class="form-control" step="any" required>
         </div>
 
         <div class="form-control mb-3 d-flex flex-column">
